@@ -1,0 +1,48 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: user-service
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    hibernate.ddl-auto: update
+#    defer-datasource-initialization: true
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+  config:
+    import: "optional:configserver:http://127.0.0.1:8888"
+  cloud:
+    config:
+      name: ecommerce
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      default-zone: http://127.0.0.1:8761/eureka
+
+greeting:
+  message: Hello, Welcome to the User service
+
+logging:
+  level:
+    me.bbbic.userservice: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
+
+#jwt:
+#  token:
+#    expiration-minutes: 180m
+#    secret: user-secret-secure-token-more-than-256
