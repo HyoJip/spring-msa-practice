@@ -4,8 +4,29 @@ server:
 spring:
   application:
     name: config-service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  profiles:
+    active: native
   cloud:
     config:
       server:
+        native:
+          search-locations: file://${user.home}/Desktop/repo/spring-msa-config-properties
         git:
-          uri: file://${user.home}/Desktop/repo/spring-msa-config-properties
+#          uri: file://${user.home}/Desktop/repo/spring-msa-config-properties
+          uri: https://github.com/HyoJip/spring-msa-config-properties
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh
+encrypt:
+#  key: bbbicb_20230813
+  key-store:
+    location: file://${user.home}/Desktop/repo/spring-msa-config-properties/keystore/apiEncrpytionKey.jks
+    alias: apiEncrpytionKey
+    password: 1q2w3e4r

@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: api-gateway
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
   config:
     import: "optional:configserver:http://127.0.0.1:8888"
   cloud:
@@ -13,6 +18,7 @@ spring:
       routes:
         - id: user-service
           uri: lb://USER-SERVICE
+          order: 1
           predicates:
             - Path=/user-service/actuator/**
             - Method=GET,POST
@@ -21,6 +27,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: user-service
           uri: lb://USER-SERVICE
+          order: 2
           predicates:
             - Path=/user-service/login
             - Method=POST
@@ -29,6 +36,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: user-service
           uri: lb://USER-SERVICE
+          order: 3
           predicates:
             - Path=/user-service/users/**
             - Method=POST
@@ -37,6 +45,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: user-service
           uri: lb://USER-SERVICE
+          order: 4
           predicates:
             - Path=/user-service/**
             - Method=GET
@@ -46,10 +55,12 @@ spring:
             - AuthorizationFilter
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
+          order: 5
           predicates:
             - Path=/catalog-service/**
         - id: order-service
           uri: lb://ORDER-SERVICE
+          order: 6
           predicates:
             - Path=/order-service/**
 
@@ -60,14 +71,8 @@ eureka:
     service-url:
       default-zone: http://localhost:8761/eureka
 
-
-jwt:
-  token:
-    expiration-minutes: 180
-    secret: user-secret-secure-token-more-than-256
-
 management:
   endpoints:
     web:
       exposure:
-        include: health, beans, refresh, httpexchanges
+        include: health, beans, refresh, httpexchanges, busrefresh

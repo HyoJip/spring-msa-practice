@@ -2,6 +2,8 @@ package me.bbbic.userservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.bbbic.userservice.client.OrderAppClient;
+import me.bbbic.userservice.client.dto.OrderDto;
 import me.bbbic.userservice.controller.dto.SignupRequest;
 import me.bbbic.userservice.controller.dto.SignupResponse;
 import me.bbbic.userservice.service.UserService;
@@ -22,6 +24,7 @@ public class UserController {
 
   private final Environment environment;
   private final UserService userService;
+  private final OrderAppClient orderAppClient;
 
   @GetMapping("/health-check")
   public String healthCheck() {
@@ -67,4 +70,12 @@ public class UserController {
       UserDto.of(userService.findUserById(userId))
     );
   }
+
+  @GetMapping("/users/{userId:[\\d+]}/orders")
+  public ResponseEntity<List<OrderDto>> findOrders(@PathVariable Long userId) {
+    return ResponseEntity.ok(
+      orderAppClient.findOrders(userId)
+    );
+  }
+
 }

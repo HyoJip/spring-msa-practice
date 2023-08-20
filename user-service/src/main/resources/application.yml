@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: user-service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
   jpa:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
     hibernate.ddl-auto: update
@@ -13,14 +18,11 @@ spring:
       enabled: true
       settings:
         web-allow-others: true
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
   config:
     import: "optional:configserver:http://127.0.0.1:8888"
   cloud:
     config:
-      name: ecommerce
+      name: ${spring.application.name}
 
 eureka:
   instance:
@@ -34,15 +36,10 @@ greeting:
 
 logging:
   level:
-    me.bbbic.userservice: debug
+    me.bbbic.userservice.client: debug
 
 management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans
-
-#jwt:
-#  token:
-#    expiration-minutes: 180m
-#    secret: user-secret-secure-token-more-than-256
+        include: refresh, health, beans, busrefresh

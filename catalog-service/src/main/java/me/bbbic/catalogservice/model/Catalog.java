@@ -44,4 +44,12 @@ public class Catalog {
     this.unitPrice = unitPrice;
     this.createdAt = createdAt;
   }
+
+  public void changeStock(int amount) {
+    if (amount < 0 && this.stock < amount) {
+      throw new IllegalStateException("amount must be smaller than current stocks.");
+    }
+
+    this.stock += amount;
+  }
 }

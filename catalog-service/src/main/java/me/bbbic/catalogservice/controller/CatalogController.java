@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CatalogController {
 
   private final CatalogService catalogService;
-
   @GetMapping("/catalogs/{id}")
   public ResponseEntity<CatalogDto> findCatalog(@PathVariable String id) {
 
