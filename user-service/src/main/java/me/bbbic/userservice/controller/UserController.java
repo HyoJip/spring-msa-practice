@@ -1,9 +1,8 @@
 package me.bbbic.userservice.controller;
 
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.bbbic.userservice.client.OrderAppClient;
-import me.bbbic.userservice.client.dto.OrderDto;
 import me.bbbic.userservice.controller.dto.SignupRequest;
 import me.bbbic.userservice.controller.dto.SignupResponse;
 import me.bbbic.userservice.service.UserService;
@@ -17,16 +16,15 @@ import java.util.List;
 import java.util.stream.StreamSupport;
 
 @RestController
-@RequestMapping
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
 
   private final Environment environment;
   private final UserService userService;
-  private final OrderAppClient orderAppClient;
 
   @GetMapping("/health-check")
+  @Timed(value = "users.status", longTask = true)
   public String healthCheck() {
     return """
        ===this user-service application with properties===
@@ -42,7 +40,7 @@ public class UserController {
         environment.getProperty("jwt.token.expiration-minutes"),
         environment.getProperty("jwt.token.secret"),
         environment.getProperty("gateway.ip")
-    );
+      );
   }
 
   @PostMapping("/users/signup")
@@ -72,9 +70,9 @@ public class UserController {
   }
 
   @GetMapping("/users/{userId:[\\d+]}/orders")
-  public ResponseEntity<List<OrderDto>> findOrders(@PathVariable Long userId) {
+  public ResponseEntity<UserDto> findUserOrders(@PathVariable Long userId) {
     return ResponseEntity.ok(
-      orderAppClient.findOrders(userId)
+      userService.findUserOrders(userId)
     );
   }
 

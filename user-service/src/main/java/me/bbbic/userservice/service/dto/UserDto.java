@@ -2,10 +2,13 @@ package me.bbbic.userservice.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import me.bbbic.userservice.client.dto.OrderDto;
 import me.bbbic.userservice.domain.User;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.springframework.beans.BeanUtils.copyProperties;
@@ -22,9 +25,10 @@ public class UserDto {
   private LocalDateTime createdAt;
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
+  private List<OrderDto> orders;
 
   @Builder
-  public UserDto(Long id, String email, String name, LocalDateTime createdAt, String password) {
+  public UserDto(Long id, String email, String name, LocalDateTime createdAt, String password, List<OrderDto> orders) {
     checkArgument(StringUtils.hasText(email), "email must be provided.");
     checkArgument(StringUtils.hasText(name), "name must be provided.");
     checkArgument(StringUtils.hasText(password), "password must be provided.");
@@ -34,6 +38,7 @@ public class UserDto {
     this.name = name;
     this.createdAt = createdAt;
     this.password = password;
+    this.orders = Objects.requireNonNullElseGet(orders, () -> List.of());
   }
 
   public static UserDto newSignup(String email, String name, String password) {

@@ -1,6 +1,8 @@
 package me.bbbic.userservice;
 
 import feign.Logger;
+import io.micrometer.core.aop.TimedAspect;
+import io.micrometer.core.instrument.MeterRegistry;
 import me.bbbic.userservice.client.FeignErrorDecoder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,5 +32,11 @@ public class UserServiceApplication {
   public FeignErrorDecoder feignErrorDecoder() {
     return new FeignErrorDecoder();
   }
+
+  @Bean
+  public TimedAspect timedAspect(MeterRegistry registry) {
+    return new TimedAspect(registry);
+  }
+
 }
 

@@ -63,6 +63,11 @@ spring:
           order: 6
           predicates:
             - Path=/order-service/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+            - AuthorizationFilter
 
 eureka:
   client:
@@ -75,4 +80,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, beans, refresh, httpexchanges, busrefresh
+        include: health, beans, refresh, httpexchanges, busrefresh, info, metrics, prometheus

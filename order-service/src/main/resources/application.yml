@@ -15,3 +15,18 @@ spring:
   cloud:
     config:
       name: ${spring.application.name}
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%x{traceid:-},%x{spanid:-}]"
+  level:
+    me.bbbic.orderservice: debug
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh, info, metrics, prometheus

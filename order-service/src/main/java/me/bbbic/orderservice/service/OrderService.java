@@ -1,6 +1,7 @@
 package me.bbbic.orderservice.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.bbbic.common.topic.PlaceOrderTopic;
 import me.bbbic.orderservice.controller.dto.OrderDto;
 import me.bbbic.orderservice.model.Order;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
 
   private final OrderRepository orderRepository;
@@ -19,8 +21,10 @@ public class OrderService {
   @Transactional
   public Order placeOrder(String userId, OrderDto orderDto) {
     Order order = Order.placeOrder(userId, orderDto);
-    orderEventService.saveOrder(order);
-    orderEventService.placeOrder(new PlaceOrderTopic(order.getProductId(), order.getQuantity()));
+    orderRepository.save(order);
+
+//    orderEventService.saveOrder(order);
+//    orderEventService.placeOrder(new PlaceOrderTopic(order.getProductId(), order.getQuantity()));
     return order;
   }
 

@@ -1,4 +1,4 @@
-package me.bbbic.userservice.security;
+package me.bbbic.userservice.configure.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
